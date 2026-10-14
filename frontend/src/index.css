@@ -1,0 +1,37 @@
+@import "tailwindcss";
+
+@theme {
+  --color-graphite: #1c1e22;
+  --color-graphite-light: #2a2d33;
+  --color-paper: #f6f4ef;
+  --color-ink: #211f1c;
+  --color-amber: #e8a33d;
+  --color-amber-dim: #b97f2c;
+  --color-steel: #7b8291;
+  --color-steel-light: #c9cdd4;
+
+  --font-display: "Space Grotesk", sans-serif;
+  --font-body: "Inter", sans-serif;
+  --font-mono: "JetBrains Mono", monospace;
+}
+
+body {
+  background-color: var(--color-paper);
+  color: var(--color-ink);
+  font-family: var(--font-body);
+}
+
+/* Nameplate texture: faint horizontal grooves like brushed metal */
+.plate-texture {
+  background-image: repeating-linear-gradient(
+    to bottom,
+    rgba(255, 255, 255, 0.02) 0px,
+    rgba(255, 255, 255, 0.02) 1px,
+    transparent 1px,
+    transparent 3px
+  );
+}
+
+.indicator-dot {
+  box-shadow: 0 0 6px 1px var(--color-amber);
+}
