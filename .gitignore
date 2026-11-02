@@ -33,3 +33,6 @@ Thumbs.db
 *.tmp
 *.swp
 *.swo
+
+# Appliance photos, manuals, and bills
+backend/data/

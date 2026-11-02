@@ -4,6 +4,7 @@ import Login from "./pages/Login.jsx";
 import Register from "./pages/Register.jsx";
 import Dashboard from "./pages/Dashboard.jsx";
 import ApplianceDetail from "./pages/ApplianceDetail.jsx";
+import Household from "./pages/Household.jsx";
 
 const ProtectedRoute = ({ children }) => {
   const { user } = useAuth();
@@ -20,6 +21,14 @@ function App() {
         element={
           <ProtectedRoute>
             <Dashboard />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/household"
+        element={
+          <ProtectedRoute>
+            <Household />
           </ProtectedRoute>
         }
       />

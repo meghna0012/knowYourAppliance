@@ -4,6 +4,7 @@ import dotenv from "dotenv";
 import connectDB from "./config/db.js";
 import authRoutes from "./routes/authRoutes.js";
 import applianceRoutes from "./routes/applianceRoutes.js";
+import householdRoutes from "./routes/householdRoutes.js";
 
 dotenv.config();
 console.log("Groq key loaded:", process.env.GROQ_API_KEY?.slice(0, 8) + "...");
@@ -17,6 +18,7 @@ app.use(express.json());
 // Separate routers so auth and appliance endpoints never collide
 app.use("/api/auth", authRoutes);
 app.use("/api/appliances", applianceRoutes);
+app.use("/api/household", householdRoutes);
 
 app.get("/", (req, res) => {
   res.send("Know Your Appliance API is running");

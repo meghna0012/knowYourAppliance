@@ -1,7 +1,9 @@
 import { useNavigate } from "react-router-dom";
+import { careLine } from "../lib/records.js";
 
 export default function ApplianceCard({ appliance, onDelete }) {
   const navigate = useNavigate();
+  const care = careLine(appliance);
 
   return (
     <div
@@ -30,9 +32,23 @@ export default function ApplianceCard({ appliance, onDelete }) {
         {appliance.brand}
       </h3>
       <p className="font-mono text-steel-light text-sm">{appliance.modelNumber}</p>
+      {appliance.serialNumber && (
+        <p className="font-mono text-xs text-steel mt-1">
+          {/^s\/?n(\b|\d)/i.test(appliance.serialNumber) ? appliance.serialNumber : `SN ${appliance.serialNumber}`}
+        </p>
+      )}
+      {appliance.uploads?.some((upload) => upload.condition?.severity === "urgent") && (
+        <p className="mt-3 font-mono text-[11px] uppercase tracking-wide text-amber">Needs attention</p>
+      )}
+      {care && (
+        <p className={`mt-3 text-xs ${care.alert ? "text-amber" : "text-steel-light"}`}>{care.text}</p>
+      )}
 
       <div className="mt-4 pt-3 border-t border-white/10 flex items-center justify-between text-xs text-steel">
-        <span>{appliance.history?.length || 0} questions asked</span>
+        <span>
+          {appliance.history?.length || 0} questions asked
+          {appliance.user?.name && <> · added by {appliance.user.name}</>}
+        </span>
         <span className="font-mono">→</span>
       </div>
     </div>

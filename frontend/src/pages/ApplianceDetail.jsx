@@ -1,6 +1,8 @@
 import { useEffect, useRef, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import api from "../api/axios.js";
+import ImageDiagnosis from "../components/ImageDiagnosis.jsx";
+import ApplianceRecords from "../components/ApplianceRecords.jsx";
 
 export default function ApplianceDetail() {
   const { id } = useParams();
@@ -55,24 +57,45 @@ export default function ApplianceDetail() {
         <div className="text-right">
           <p className="font-display font-semibold">{appliance.brand}</p>
           <p className="font-mono text-xs text-steel">{appliance.modelNumber}</p>
+          {(appliance.generation || appliance.serialNumber) && (
+            <p className="font-mono text-[10px] uppercase tracking-wide text-steel">
+              {[
+                appliance.generation,
+                appliance.serialNumber &&
+                  (/^s\/?n(\b|\d)/i.test(appliance.serialNumber)
+                    ? appliance.serialNumber
+                    : `SN ${appliance.serialNumber}`),
+              ]
+                .filter(Boolean)
+                .join(" · ")}
+            </p>
+          )}
         </div>
       </header>
 
       <main className="flex-1 max-w-2xl w-full mx-auto px-6 py-8 flex flex-col">
+        <ApplianceRecords appliance={appliance} onChange={setAppliance} />
+        <ImageDiagnosis appliance={appliance} onChange={setAppliance} />
+
         <div className="flex-1 space-y-4 mb-4">
           {appliance.history.length === 0 && (
             <p className="text-steel text-sm text-center mt-10">
-              Ask anything about your {appliance.brand} {appliance.modelNumber} — error
-              codes, maintenance, part numbers, settings, and more.
+              Ask anything about your {appliance.brand} {appliance.modelNumber}. Answers
+              use what was read from your uploads, then general guidance for this model.
             </p>
           )}
 
           {appliance.history.map((qa) => (
             <div key={qa._id} className="space-y-2">
-              <div className="flex justify-end">
+              <div className="flex flex-col items-end">
                 <div className="bg-amber text-graphite rounded-lg rounded-br-none px-4 py-2 max-w-[80%] text-sm font-medium">
                   {qa.question}
                 </div>
+                {qa.askedBy?.name && (
+                  <span className="font-mono text-[10px] uppercase tracking-wide text-steel mt-1">
+                    {qa.askedBy.name}
+                  </span>
+                )}
               </div>
               <div className="flex justify-start">
                 <div className="bg-graphite plate-texture text-paper rounded-lg rounded-bl-none px-4 py-2 max-w-[80%] text-sm whitespace-pre-wrap">

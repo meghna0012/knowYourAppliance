@@ -1,11 +1,13 @@
 import express from "express";
 import jwt from "jsonwebtoken";
 import User from "../models/User.js";
+import { protect } from "../middleware/authMiddleware.js"
+import { createPersonalHousehold } from "../services/householdService.js";
 
 const router = express.Router();
 
 const generateToken = (id) =>
-  jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: "1m" });
+  jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: "1h" });
 
 // @route   POST /api/auth/register
 router.post("/register", async (req, res) => {
@@ -22,6 +24,7 @@ router.post("/register", async (req, res) => {
     }
 
     const user = await User.create({ name, email, password });
+    await createPersonalHousehold(user);
 
     res.status(201).json({
       _id: user._id,
@@ -56,9 +59,13 @@ router.post("/login", async (req, res) => {
 });
 
 // @route   GET /api/auth/me
-router.get("/me", async (req, res) => {
+router.get("/me", protect , async (req, res) => {
   // Lightweight helper endpoint, not strictly required, kept simple here.
-  res.status(200).json({ message: "Use POST /login or /register" });
+  res.status(200).json({ 
+    _id: req.user._id,
+    name: req.user.name,
+    email: req.user.email,
+    household: req.user.household, });
 });
 
 export default router;
